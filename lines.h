@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef _LINES_H_
+#define _LINES_H_
 
 #include "points.h"
 

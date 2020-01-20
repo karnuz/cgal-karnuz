@@ -1,3 +1,4 @@
+#include <iostream>
 #include "points.h"
 #include "lines.h"
 #include "utils.h"
@@ -19,7 +20,7 @@ bool isPointOnSegment(Point p1, Point p2, Point q) {
 }
 
 
-bool doesintersect(Line l1, Line l2) {
+bool doesIntersect(Line l1, Line l2) {
   Point p1, p2, q1, q2;
 
   int o1, o2, o3, o4;
