@@ -1,10 +1,13 @@
 CC=g++
 CFLAGS=-I.
-SRC=$(wildcard *.cpp)
-OBJ=$(patsubst %.cpp,%.o,$(SRC))
+SRC=$(wildcard src/*.cpp)
+# SRC=$(addprefix src/,$(SRCF))
+OBJF=$(patsubst %.cpp,%.o,$(SRC))
+OBJ=$(patsubst src/%,bin/%,$(OBJF))
+OBJDIR=bin
 
-%.o: $(SRC)
-	$(CC) -c $^ $(CFLAGS)
+$(OBJDIR)/%.o: $(SRC)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 build: $(OBJ) 
-	$(CC) -shared -o libkarnuz.so $(OBJ) 
+	$(CC) -Wall -Isrc -shared -o $(OBJDIR)/libkarnuz.so $(OBJ)
