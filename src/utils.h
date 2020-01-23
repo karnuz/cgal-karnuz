@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef _UTILS_H_
+#define _UTILS_H_
 
 
 float min(float a, float b);
