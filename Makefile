@@ -6,8 +6,8 @@ OBJF=$(patsubst %.cpp,%.o,$(SRC))
 OBJ=$(patsubst src/%,bin/%,$(OBJF))
 OBJDIR=bin
 
-$(OBJDIR)/%.o: $(SRC)
-	$(CC) -c -o $@ $< $(CFLAGS)
+$(OBJ): bin/%.o : src/%.cpp
+	$(CC) -c $^ $(CFLAGS) -o $@
 
 build: $(OBJ) 
 	$(CC) -Wall -Isrc -shared -o $(OBJDIR)/libkarnuz.so $(OBJ)
