@@ -22,14 +22,19 @@ bool isPointOnSegment(Point p1, Point p2, Point q) {
 
 bool doesIntersect(Line l1, Line l2) {
   Point p1, p2, q1, q2;
-
+  p1 = l1.p1;
+  p2 = l1.p2;
+  q1 = l2.p1;
+  q2 = l2.p2;
+  
   int o1, o2, o3, o4;
 
   // non collinear case
   o1 = get_orientation(p1, p2, q1);
   o2 = get_orientation(p1, p2, q2);
   o3 = get_orientation(q1, q2, p1);
-  o3 = get_orientation(q1, q2, p2);
+  o4 = get_orientation(q1, q2, p2);
+  cout << o1 << "\n" << o2 << "\n" << o3 << "\n" << o4 << "\n";
 
   if(o1 != o2 && o3 != o4) {
     return true;
@@ -40,7 +45,7 @@ bool doesIntersect(Line l1, Line l2) {
 
   b1 = isPointOnSegment(q1, q2, p1);
   b2 = isPointOnSegment(q1, q2, p2);
-
+  cout << b1 << "\n" << b2 << "\n";
   if (b1 || b2 ) {
     return true;
   }

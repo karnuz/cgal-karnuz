@@ -1,13 +1,59 @@
-CC=g++
-CFLAGS=-I.
-SRC=$(wildcard src/*.cpp)
-# SRC=$(addprefix src/,$(SRCF))
-OBJF=$(patsubst %.cpp,%.o,$(SRC))
-OBJ=$(patsubst src/%,bin/%,$(OBJF))
+CXX=g++
+
 OBJDIR=bin
+SRCDIR=src
+TESTDIR=test
+TEST_OBJDIR=bin/test
+LIBNAME=karnuz
 
-$(OBJ): bin/%.o : src/%.cpp
-	$(CC) -c $^ $(CFLAGS) -o $@
+LIB=$(OBJDIR)/lib$(LIBNAME).so
 
-build: $(OBJ) 
-	$(CC) -Wall -Isrc -shared -o $(OBJDIR)/libkarnuz.so $(OBJ)
+SRC=$(wildcard $(SRCDIR)/*.cpp)
+OBJS=$(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
+
+TEST_SRC=$(wildcard $(TESTDIR)/*.cpp)
+TEST_OBJS=$(patsubst $(TESTDIR)/%.cpp, $(TEST_OBJDIR)/%.o, $(TEST_SRC))
+TEST_BINS=$(patsubst %.o, %, $(TEST_OBJS))
+
+CFLAGS=-Isrc/ -fPIC
+
+TEST_LDFLAGS=-L$(OBJDIR) -l$(LIBNAME) -Wl,-rpath $(OBJDIR)
+
+# define a newline function to run each test as a separate command
+define \n
+
+
+endef
+
+default: $(LIB)
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)
+	$(CXX) -c -o $@ $< $(CFLAGS)
+
+$(LIB): $(OBJS)
+	$(CXX) -shared -o $@ $^
+
+$(OBJDIR):
+	mkdir $@
+
+tests: $(LIB) $(TEST_OBJDIR) $(TEST_BINS)
+
+$(TEST_BINS): $(TEST_OBJS)
+
+$(TEST_OBJDIR): $(OBJDIR)
+	mkdir $@
+
+$(TEST_OBJDIR)/%: $(TEST_OBJDIR)/%.o $(LIB)
+	$(CXX) -o $@ $< $(TEST_LDFLAGS)
+
+$(TEST_OBJDIR)/%.o: $(TESTDIR)/%.cpp $(OBJDIR)
+	$(CXX) -I$(SRCDIR) -c -o $@ $<
+
+check: tests
+	@echo "Running tests..."
+	$(foreach TEST, $(TEST_BINS), @./$(TEST) 2>&1 1>/dev/null && printf "$(TEST) \t Pass\n" || printf "$(TEST) \t Fail\n";${\n})
+
+clean:
+	rm -rf $(OBJDIR)
+
+.PHONY: clean default tests check
