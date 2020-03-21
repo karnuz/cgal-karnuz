@@ -1,9 +1,28 @@
 #include <iostream>
-#include "points.h"
+#include "point.h"
 #include "lines.h"
 #include "utils.h"
+#include <cstdlib>
+#include <limits>
 
 using namespace std;
+
+
+float getSlope(Line l) {
+  float x1, y1, x2, y2;
+  x1 = l.p1.x;
+  x2 = l.p2.x;
+  y1 = l.p1.y;
+  y2 = l.p2.y;
+
+  if(x1 == x2) {
+    return numeric_limits<float>::infinity();
+  } else {
+    float m = (y2 - y1)/(x2 - x1);
+    return m;
+  }
+}
+
 
 bool isPointOnSegment(Point p1, Point p2, Point q) {
   float minx, maxx, miny, maxy;

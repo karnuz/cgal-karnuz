@@ -1,4 +1,4 @@
-CXX=g++
+CXX=g++ -std=c++11
 
 OBJDIR=bin
 SRCDIR=src
@@ -15,7 +15,7 @@ TEST_SRC=$(wildcard $(TESTDIR)/*.cpp)
 TEST_OBJS=$(patsubst $(TESTDIR)/%.cpp, $(TEST_OBJDIR)/%.o, $(TEST_SRC))
 TEST_BINS=$(patsubst %.o, %, $(TEST_OBJS))
 
-CFLAGS=-Isrc/ -fPIC
+CFLAGS=-Isrc/ -I/Users/himanshusharma/bin/gtestlibs/include -L/Users/himanshusharma/bin/gtestlibs/lib -lgtest -fPIC
 
 TEST_LDFLAGS=-L$(OBJDIR) -l$(LIBNAME) -Wl,-rpath $(OBJDIR)
 
@@ -28,10 +28,10 @@ endef
 default: $(LIB)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(OBJDIR)
-	$(CXX) -c -o $@ $< $(CFLAGS)
+	$(CXX) -D_DEBUG -g -O0 -c -o $@ $< $(CFLAGS)
 
 $(LIB): $(OBJS)
-	$(CXX) -shared -o $@ $^
+	$(CXX) -D_DEBUG -g -O0 -shared -o $@ $^
 
 $(OBJDIR):
 	mkdir $@
@@ -44,10 +44,10 @@ $(TEST_OBJDIR): $(OBJDIR)
 	mkdir $@
 
 $(TEST_OBJDIR)/%: $(TEST_OBJDIR)/%.o $(LIB)
-	$(CXX) -o $@ $< $(TEST_LDFLAGS)
+	$(CXX) -g -o $@ $< $(TEST_LDFLAGS)
 
 $(TEST_OBJDIR)/%.o: $(TESTDIR)/%.cpp $(OBJDIR)
-	$(CXX) -I$(SRCDIR) -c -o $@ $<
+	$(CXX) -D_DEBUG -g -O0 -I$(SRCDIR) -c -o $@ $<
 
 check: tests
 	@echo "Running tests..."

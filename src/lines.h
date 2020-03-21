@@ -1,7 +1,7 @@
 #ifndef _LINES_H_
 #define _LINES_H_
 
-#include "points.h"
+#include "point.h"
 
 struct Line {
   Point p1;
